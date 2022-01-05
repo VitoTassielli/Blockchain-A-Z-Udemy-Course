@@ -20,3 +20,8 @@ class Blockchain:
 
         self.chain.append(block)
         return block   
+
+
+    # get_previous_block() function return previous block of the blockchain
+    def get_previous_block(self):
+        return self.chain[-1]
