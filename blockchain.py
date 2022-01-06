@@ -26,6 +26,7 @@ class Blockchain:
     def get_previous_block(self):
         return self.chain[-1]
 
+
     # proof_of_work() function returns the proof (if found it) of the mined block
     def proof_of_work(self, previous_proof):
         new_proof = 1
@@ -55,3 +56,11 @@ class Blockchain:
                 new_proof += 1
 
         return new_proof
+
+
+    # hash() takes input a block and returns its SHA256 hash
+    def hash(self, block):
+
+        # We have to convert the block's dictionary to a string, in order to make its hash
+        encoded_block = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
