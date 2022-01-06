@@ -105,6 +105,12 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 # Creating a Blockchain
 blockchain = Blockchain()
 
+# Request index page to check if server is running
+@app.route('/index', methods=['GET'])
+def index():
+    response = {'message': 'Server is running'}
+    return jsonify(response), 200
+
 # Mining a new block
 @app.route('/mine_block', methods=['GET'])
 def mine_block():
@@ -126,7 +132,6 @@ def mine_block():
     # Return to print in Postman
     return jsonify(response), 200
 
-
 # Getting the full Blockchain
 @app.route('/get_chain', methods=['GET'])
 def get_chain():
@@ -134,11 +139,12 @@ def get_chain():
                 'lenght': len(blockchain.chain)}
     return jsonify(response), 200
 
-# Getting the full Blockchain
-@app.route('/index', methods=['GET'])
-def index():
-    response = {'message': 'Server is running'}
+# Check is the chain is valid the full Blockchain
+@app.route('/is_valid', methods=['GET'])
+def is_valid():
+    response = {'is_valid': blockchain.is_chain_valid(blockchain.chain)}
     return jsonify(response), 200
+
 
 
 # Running the app
