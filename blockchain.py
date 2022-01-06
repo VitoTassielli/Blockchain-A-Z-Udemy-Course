@@ -1,7 +1,9 @@
 import datetime
 import hashlib
 import json
+from flask import Flask
 
+# Part 1
 # Blockchain class has all the Blockchain's pillars, as the Genesis Block and the main blockchain functions
 class Blockchain:
     
@@ -91,3 +93,12 @@ class Blockchain:
             previous_block = block
             block_index += 1
         return True
+
+
+
+#Part2 - Mining out Blockchain
+# Creating a Web App
+app = Flask(__name__)
+
+# Creating a Blockchain
+blockchain = Blockchain()
