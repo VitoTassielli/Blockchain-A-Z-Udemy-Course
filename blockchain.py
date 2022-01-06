@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import json
 from flask import Flask
+from flask import jsonify
 
 # Part 1
 # Blockchain class has all the Blockchain's pillars, as the Genesis Block and the main blockchain functions
@@ -99,6 +100,7 @@ class Blockchain:
 #Part2 - Mining our Blockchain
 # Creating a Web App
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 # Creating a Blockchain
 blockchain = Blockchain()
@@ -131,3 +133,14 @@ def get_chain():
     response = {'chain': blockchain.chain,
                 'lenght': len(blockchain.chain)}
     return jsonify(response), 200
+
+# Getting the full Blockchain
+@app.route('/index', methods=['GET'])
+def index():
+    response = {'message': 'Server is running'}
+    return jsonify(response), 200
+
+
+# Running the app
+# To talk to server, send HTTP GET request to 127:0.0.1:5001/(name_function)
+app.run(host='0.0.0.0', port=5001)
