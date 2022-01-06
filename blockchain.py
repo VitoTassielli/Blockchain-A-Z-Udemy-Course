@@ -64,3 +64,30 @@ class Blockchain:
         # We have to convert the block's dictionary to a string, in order to make its hash
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
+
+    
+    # is_chain_valid() checks that the blockchain has a valid chain. A chain is not valid if:
+    # - if a block has a wrong previous_block value in its dictionary
+    # OR
+    # - if a block has a fake proof which doesn't the request of inizial 4 leading zero
+    def is_chain_valid(self, chain):
+        previous_block = chain[0]
+        block_index = 1
+
+        while block_index < len(chain):
+            # First check
+            block = chain[block_index]
+            if block['previous_hash'] != self.hash(previous_block):
+                return False
+
+            # Second check
+            previous_proof = previous_block['proof']
+            proof = block['proof']
+            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()  
+            if hash_operation[:4] != '0000':
+                return False
+
+            # Incrementing
+            previous_block = block
+            block_index += 1
+        return True
