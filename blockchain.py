@@ -11,7 +11,7 @@ class Blockchain:
         self.create_block(proof = 1, previous_hash = '0')      # inizializing the Genesis Block of the Blockchain
 
 
-    # create_block() function return a block passed the proof (found by the miner) and the previous_hash (to link the new block at the blockchain)
+    # create_block() function returns a block passed the proof (found by the miner) and the previous_hash (to link the new block at the blockchain)
     def create_block(self, proof, previous_hash):
         block = {'index': len(self.chain) + 1,
                  'timestamp': str(datetime.datetime.now()),
@@ -22,6 +22,36 @@ class Blockchain:
         return block   
 
 
-    # get_previous_block() function return previous block of the blockchain
+    # get_previous_block() function returns previous block of the blockchain
     def get_previous_block(self):
         return self.chain[-1]
+
+    # proof_of_work() function returns the proof (if found it) of the mined block
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False
+
+        # In this blockchain it's not used the hash of the whole block, but it's set a different challenge called hash_operation.
+        # The operation cannot be symmetrical and for this reason it's been excluded the sum operation.
+
+        # Increment new_proof with the while loop at one time it will be equal to an old proof and that will set a deadlock while looking for new different proofs':
+        # the sequential blocks will alternate the two found proofs.
+
+        # Example: block1 has proof=10 and we are looking for block2's proof.
+        # We found new_proof=5 and the sum operation new_proof+previous_proof=15 and its hash has the 4 leading zero, so new_proof=5 is correct.
+
+        # Now we have to look for block3's proof, so previous_proof=5. At the time when new_proof=10 the operation sum new_proof+previous_proof=15,
+        # exactly LIKE BEFORE and its hash has the 4 leading zero.
+        # So we found block1_proof=10, block2_proof=5 e block3_proof=10. It's evident that looking for block4's proof we'll found new_proof=5 e so on.
+        
+        # We'll have a deadlock between the two found proofs. With subtraction operation we don't have this problem
+        # (we set the square operation to make the challenge a bit more difficult)
+
+        while check_proof is False:
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()  #hexdigest() makes the correct hash format
+            if hash_operation[:4] == '0000':
+                check_proof = True
+            else:
+                new_proof += 1
+
+        return new_proof
